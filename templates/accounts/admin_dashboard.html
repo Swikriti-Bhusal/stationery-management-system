@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Smart Stationery</title>
+    <style>
+        body { font-family: Arial; background: #f4f7f9; padding: 40px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
+        h1 { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, <strong>{{ user.full_name }}</strong></p>
+        <p>You are logged in as <strong>Administrator</strong></p>
+        <hr>
+        <p><a href="{% url 'admin_logout' %}">Logout</a></p>
+    </div>
+</body>
+</html>
