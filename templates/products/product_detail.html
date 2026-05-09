@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }} - Smart Stationery</title>
+    <style>
+        body { font-family: Arial; padding: 30px; background: #f8f9fa; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
+        img { max-width: 100%; border-radius: 10px; }
+        .price { font-size: 1.8em; color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'product_list' %}">← Back to Products</a>
+        
+        <h1>{{ product.name }}</h1>
+        
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% endif %}
+        
+        <p><strong>Category:</strong> {{ product.category }}</p>
+        <p class="price">Rs. {{ product.price }}</p>
+        <p><strong>Stock:</strong> {{ product.stock }} items</p>
+        <p>{{ product.description }}</p>
+        
+        <a href="{% url 'cart:add_to_cart' product.id %}">
+        
+    <button style="background:#28a745; color:white; padding:12px 25px; font-size:1.1em;">
+        Add to Cart
+    </button>
+</a>
+    </div>
+</body>
+</html>

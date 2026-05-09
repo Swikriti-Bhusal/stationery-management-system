@@ -2,19 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customer Dashboard - Smart Stationery</title>
+    <title>Customer Dashboard</title>
     <style>
-        body { font-family: Arial; background: #f4f7f9; padding: 40px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
-        h1 { color: #28a745; }
+        body { font-family: Arial, sans-serif; background: #f4f7f9; padding: 40px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        nav a { margin: 0 15px; text-decoration: none; font-weight: bold; color: #007bff; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome, {{ user.full_name }} 👋</h1>
-        <p>You are logged in as <strong>Customer</strong></p>
-        <hr>
-        <p><a href="{% url 'customer_logout' %}">Logout</a></p>
+        <p><strong>Role:</strong> Customer</p>
+        <nav>
+    <a href="{% url 'product_list' %}">🛒 Browse Products</a>
+    <a href="{% url 'cart:cart_view' %}">🛍️ My Cart</a>
+    <a href="#">📦 My Orders</a>
+    <a href="{% url 'customer_logout' %}">Logout</a>
+</nav>
     </div>
+    {% if messages %}
+    {% for message in messages %}
+        <p style="color: {% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %};">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
 </body>
 </html>

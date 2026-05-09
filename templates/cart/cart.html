@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <style>
+        body { font-family: Arial; background: #f4f7f9; padding: 30px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        .total { font-size: 1.5em; font-weight: bold; color: #28a745; text-align: right; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Cart ({{ cart_items|length }} items)</h1>
+        <a href="{% url 'product_list' %}">← Continue Shopping</a>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% if cart_items %}
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>Rs. {{ item.product.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>Rs. {{ item.get_total_price }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <div class="total">Grand Total: Rs. {{ total_price }}</div>
+        {% else %}
+            <h3>Your cart is empty.</h3>
+            <p>No items found in your cart.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

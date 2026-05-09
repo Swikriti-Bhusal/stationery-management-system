@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products - Admin</title>
+    <style> body { font-family: Arial; padding: 20px; } table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; border: 1px solid #ddd; } </style>
+</head>
+<body>
+    <h1>Manage Products</h1>
+    <a href="/admin/products/add/">Add New Product (via Django Admin)</a><br><br>
+    
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>Rs. {{ product.price }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.is_available|yesno:"Available,Out of Stock" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

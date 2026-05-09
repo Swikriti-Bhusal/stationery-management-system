@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Smart Stationery</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f9fa; padding: 20px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; }
+        .product-info { padding: 15px; }
+        .price { color: #28a745; font-size: 1.2em; font-weight: bold; }
+        button { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Stationery Products</h1>
+        {% if messages %}
+    {% for message in messages %}
+        <p style="color: {% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %};">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
+    
+    <a href="{% url 'customer_dashboard' %}">← Back to Dashboard</a>
+    <a href="{% url 'cart:cart_view' %}" style="font-size:18px; margin-left:20px;">
+    🛍️ My Cart
+</a>
+
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% endif %}
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p><strong>Category:</strong> {{ product.category }}</p>
+                <p class="price">Rs. {{ product.price }}</p>
+                <p>Stock: {{ product.stock }}</p>
+                <a href="{% url 'product_detail' product.slug %}">
+    <button>View Details</button>
+</a>
+<a href="{% url 'cart:add_to_cart' product.id %}">
+    <button style="background:#28a745;">Add to Cart</button>
+</a>
+
+                
+            </div>
+        </div>
+        {% empty %}
+            <p>No products available yet.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

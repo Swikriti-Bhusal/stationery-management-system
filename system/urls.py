@@ -7,6 +7,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),           # Django default admin (we will use later)
     path('', include('accounts.urls')),        # All our custom auth URLs
+    path('products/', include('products.urls')),
+    # path('cart/', include('cart.urls')),
+    #  path('cart/', include('cart.urls', namespace='cart')),
+     path('cart/', include('cart.urls')),
 ]
 
 # Serve media files during development
