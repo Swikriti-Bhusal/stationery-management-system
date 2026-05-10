@@ -27,21 +27,32 @@
 
         {% if cart_items %}
             <table>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                </tr>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>Rs. {{ item.product.price }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>Rs. {{ item.get_total_price }}</td>
-                </tr>
-                {% endfor %}
-            </table>
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Action</th>
+    </tr>
+    {% for item in cart_items %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>Rs. {{ item.product.price }}</td>
+        <td>
+            <a href="{% url 'cart:update_cart_quantity' item.id %}?action=decrease" 
+               style="text-decoration:none; font-size:18px;">➖</a>
+            &nbsp; {{ item.quantity }} &nbsp;
+            <a href="{% url 'cart:update_cart_quantity' item.id %}?action=increase" 
+               style="text-decoration:none; font-size:18px;">➕</a>
+        </td>
+        <td>Rs. {{ item.get_total_price }}</td>
+        <td>
+            <a href="{% url 'cart:remove_from_cart' item.id %}" 
+               style="color:red; font-weight:bold;">Remove</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
             <div class="total">
                 Grand Total: Rs. {{ total_price }}

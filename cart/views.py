@@ -9,34 +9,6 @@ def get_user_cart(user):
     return cart
 
 
-# @login_required
-# def add_to_cart(request, product_id):
-#     if request.user.role != 'customer':
-#         messages.error(request, "Only customers can add items to cart.")
-#         return redirect('product_list')
-    
-#     product = get_object_or_404(Product, id=product_id)
-    
-#     if product.stock <= 0:
-#         messages.warning(request, f"{product.name} is out of stock!")
-#         return redirect('product_list')
-    
-#     cart = get_user_cart(request.user)
-    
-#     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    
-#     if not created:
-#         if cart_item.quantity < product.stock:
-#             cart_item.quantity += 1
-#             cart_item.save()
-#             messages.success(request, f"Quantity of {product.name} increased.")
-#         else:
-#             messages.warning(request, "Not enough stock available!")
-#     else:
-#         messages.success(request, f"{product.name} has been added to your cart.")
-    
-#     return redirect('product_list')
-
 @login_required
 def add_to_cart(request, product_id):
     if request.user.role != 'customer':
@@ -69,20 +41,6 @@ def add_to_cart(request, product_id):
     return redirect('product_list')
 
 
-# @login_required
-# def cart_view(request):
-#     if request.user.role != 'customer':
-#         return redirect('admin_dashboard')
-    
-#     cart = get_user_cart(request.user)
-#     cart_items = cart.items.all()
-#     total_price = cart.get_total_price() if cart_items else 0
-    
-#     return render(request, 'cart/cart.html', {
-#         'cart_items': cart_items,
-#         'total_price': total_price
-#     })
-
 @login_required
 def cart_view(request):
     if request.user.role != 'customer':
@@ -96,3 +54,41 @@ def cart_view(request):
         'cart_items': cart_items,
         'total_price': total_price,
     })
+
+# Update Quantity (+ or -)
+@login_required
+def update_cart_quantity(request, item_id):
+    if request.user.role != 'customer':
+        return redirect('cart:cart_view')
+    
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    
+    action = request.GET.get('action')
+    
+    if action == 'increase':
+        if cart_item.quantity < cart_item.product.stock:
+            cart_item.quantity += 1
+            cart_item.save()
+            messages.success(request, "Quantity increased.")
+    elif action == 'decrease':
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+            messages.success(request, "Quantity decreased.")
+        else:
+            cart_item.delete()
+            messages.success(request, "Item removed from cart.")
+    
+    return redirect('cart:cart_view')
+
+
+# Remove Item from Cart
+@login_required
+def remove_from_cart(request, item_id):
+    if request.user.role != 'customer':
+        return redirect('cart:cart_view')
+    
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    cart_item.delete()
+    messages.success(request, "Item removed from cart.")
+    return redirect('cart:cart_view')

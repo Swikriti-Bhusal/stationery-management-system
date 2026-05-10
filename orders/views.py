@@ -49,7 +49,8 @@ def place_order(request):
     cart.items.all().delete()
     
     messages.success(request, f"Order #{order.id} placed successfully!")
-    return redirect('order_success', order_id=order.id)
+    return redirect('orders:order_success', order_id=order.id)
+    # return redirect('order_success', order_id=order.id)
 
 
 @login_required
@@ -65,3 +66,4 @@ def my_orders(request):
 def order_success(request, order_id):
     order = Order.objects.get(id=order_id, user=request.user)
     return render(request, 'orders/order_success.html', {'order': order})
+
