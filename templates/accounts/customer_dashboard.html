@@ -13,10 +13,10 @@
     <div class="container">
         <h1>Welcome, {{ user.full_name }} 👋</h1>
         <p><strong>Role:</strong> Customer</p>
-        <nav>
+<nav>
     <a href="{% url 'product_list' %}">🛒 Browse Products</a>
     <a href="{% url 'cart:cart_view' %}">🛍️ My Cart</a>
-    <a href="#">📦 My Orders</a>
+    <a href="{% url 'orders:my_orders' %}">📦 My Orders</a>
     <a href="{% url 'customer_logout' %}">Logout</a>
 </nav>
     </div>

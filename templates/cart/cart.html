@@ -2,23 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - Smart Stationery</title>
     <style>
-        body { font-family: Arial; background: #f4f7f9; padding: 30px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        body { font-family: Arial, sans-serif; background: #f4f7f9; padding: 30px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; }
         .total { font-size: 1.5em; font-weight: bold; color: #28a745; text-align: right; margin: 20px 0; }
+        button, a.button { padding: 12px 25px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-size: 1.1em; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>My Cart ({{ cart_items|length }} items)</h1>
+        <h1>My Cart</h1>
         <a href="{% url 'product_list' %}">← Continue Shopping</a>
-        
+
         {% if messages %}
             {% for message in messages %}
-                <p style="color:green;">{{ message }}</p>
+                <p style="color: green; font-weight: bold;">{{ message }}</p>
             {% endfor %}
         {% endif %}
 
@@ -27,7 +30,7 @@
                 <tr>
                     <th>Product</th>
                     <th>Price</th>
-                    <th>Qty</th>
+                    <th>Quantity</th>
                     <th>Total</th>
                 </tr>
                 {% for item in cart_items %}
@@ -39,10 +42,20 @@
                 </tr>
                 {% endfor %}
             </table>
-            <div class="total">Grand Total: Rs. {{ total_price }}</div>
+
+            <div class="total">
+                Grand Total: Rs. {{ total_price }}
+            </div>
+
+            <br>
+            <a href="{% url 'orders:place_order' %}" class="button">
+                ✅ Place Order Now
+            </a>
+
         {% else %}
             <h3>Your cart is empty.</h3>
-            <p>No items found in your cart.</p>
+            <p>No items in your cart yet.</p>
+            <a href="{% url 'product_list' %}">Browse Products</a>
         {% endif %}
     </div>
 </body>

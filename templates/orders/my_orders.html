@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <style>
+        body { font-family: Arial; background: #f4f7f9; padding: 30px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Orders</h1>
+        <a href="{% url 'product_list' %}">← Browse Products</a>
+        
+        {% if orders %}
+            <table>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.order_date|date:"d M, Y" }}</td>
+                    <td>Rs. {{ order.total_amount }}</td>
+                    <td>{{ order.status|title }}</td>
+                    <td><a href="#">View Details</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h3>You have no orders yet.</h3>
+        {% endif %}
+    </div>
+</body>
+</html>

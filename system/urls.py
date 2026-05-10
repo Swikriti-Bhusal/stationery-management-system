@@ -11,6 +11,7 @@ urlpatterns = [
     # path('cart/', include('cart.urls')),
     #  path('cart/', include('cart.urls', namespace='cart')),
      path('cart/', include('cart.urls')),
+     path('orders/', include('orders.urls', namespace='orders')),
 ]
 
 # Serve media files during development

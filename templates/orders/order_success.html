@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Successful</title>
+    <style>
+        body { font-family: Arial; background: #f4f7f9; padding: 40px; text-align: center; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 40px; border-radius: 10px; }
+        h1 { color: #28a745; }
+        .order-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Order Placed Successfully!</h1>
+        <div class="order-box">
+            <h2>Order #{{ order.id }}</h2>
+            <p><strong>Total Amount:</strong> Rs. {{ order.total_amount }}</p>
+            <p><strong>Status:</strong> {{ order.status|title }}</p>
+            <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+        </div>
+        <a href="{% url 'my_orders' %}" style="background:#007bff; color:white; padding:12px 25px; text-decoration:none; border-radius:5px;">
+            View My Orders
+        </a>
+        <a href="{% url 'product_list' %}" style="margin-left:15px;">Continue Shopping</a>
+    </div>
+</body>
+</html>
