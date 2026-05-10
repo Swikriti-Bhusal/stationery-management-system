@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from cart.models import Cart
@@ -67,3 +67,15 @@ def order_success(request, order_id):
     order = Order.objects.get(id=order_id, user=request.user)
     return render(request, 'orders/order_success.html', {'order': order})
 
+@login_required
+def order_detail(request, order_id):
+    if request.user.role != 'customer':
+        return redirect('admin_dashboard')
+    
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    items = order.items.select_related('product').all()
+    
+    return render(request, 'orders/order_detail.html', {
+        'order': order,
+        'items': items
+    })

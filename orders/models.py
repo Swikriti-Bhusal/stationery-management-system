@@ -32,3 +32,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
+    
+    def get_total_price(self):
+        return self.quantity * self.price_at_time

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order #{{ order.id }} Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f9; padding: 30px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; }
+        .total-row { font-weight: bold; font-size: 1.2em; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order #{{ order.id }} Details</h1>
+        <p><strong>Date:</strong> {{ order.order_date|date:"d M, Y h:i A" }}</p>
+        <p><strong>Status:</strong> {{ order.status|title }}</p>
+        <p><strong>Total Amount:</strong> Rs. {{ order.total_amount }}</p>
+        <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+
+        <h2>Ordered Items</h2>
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price per Unit</th>
+        <th>Total</th>
+    </tr>
+    {% for item in items %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>Rs. {{ item.price_at_time }}</td>
+        <td><strong>Rs. {{ item.get_total_price }}</strong></td>
+    </tr>
+    {% endfor %}
+</table>
+
+        <br>
+        <a href="{% url 'orders:my_orders' %}">← Back to My Orders</a>
+    </div>
+</body>
+</html>

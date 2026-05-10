@@ -31,7 +31,9 @@
                     <td>{{ order.order_date|date:"d M, Y" }}</td>
                     <td>Rs. {{ order.total_amount }}</td>
                     <td>{{ order.status|title }}</td>
-                    <td><a href="#">View Details</a></td>
+                    <td>
+    <a href="{% url 'orders:order_detail' order.id %}">View Details</a>
+</td>
                 </tr>
                 {% endfor %}
             </table>
