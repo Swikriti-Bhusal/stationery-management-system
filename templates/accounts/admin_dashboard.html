@@ -2,20 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - Smart Stationery</title>
+    <title>Admin Dashboard</title>
     <style>
         body { font-family: Arial; background: #f4f7f9; padding: 40px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
-        h1 { color: #dc3545; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 10px; }
+        nav a { display: inline-block; margin: 10px; padding: 15px 25px; background: #dc3545; color: white; text-decoration: none; border-radius: 8px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Admin Dashboard</h1>
         <p>Welcome, <strong>{{ user.full_name }}</strong></p>
-        <p>You are logged in as <strong>Administrator</strong></p>
-        <hr>
-        <p><a href="{% url 'admin_logout' %}">Logout</a></p>
+        
+        <nav>
+            <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+            <a href="{% url 'orders:admin_order_list' %}">📋 Manage Orders</a>
+            <a href="/admin/products/product/">📦 Manage Products</a>
+            <a href="{% url 'admin_product_list' %}">📋 Product List (Custom)</a>
+            <a href="{% url 'admin_logout' %}">Logout</a>
+        </nav>
     </div>
 </body>
 </html>

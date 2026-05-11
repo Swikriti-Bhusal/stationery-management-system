@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - All Orders</title>
+    <style>
+        body { font-family: Arial; background: #f4f7f9; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background: #343a40; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>All Customer Orders</h1>
+        <a href="{% url 'admin_dashboard' %}">← Back to Admin Dashboard</a>
+        
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.user.full_name }}</td>
+                <td>{{ order.order_date|date:"d M, Y" }}</td>
+                <td>Rs. {{ order.total_amount }}</td>
+                <td>{{ order.status|title }}</td>
+                <td>
+                    <a href="{% url 'orders:admin_order_detail' order.id %}">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
