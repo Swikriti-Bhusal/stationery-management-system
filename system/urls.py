@@ -32,6 +32,7 @@ urlpatterns = [
 
     # Django Admin (Keep at bottom)
     path('admin/', admin.site.urls),
+    path('reports/', include('reports.urls')),
 ]
 
 if settings.DEBUG:
