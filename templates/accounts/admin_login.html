@@ -1,31 +1,3 @@
- {% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Smart Stationery</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f7f9; padding: 50px; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background: #dc3545; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
-        button:hover { background: #c82333; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Admin Login</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <input type="email" name="email" placeholder="Admin Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Admin Login</button>
-        </form>
-        <p><a href="{% url 'customer_login' %}">Customer Login</a></p>
-    </div>
-</body>
-</html>  {% endcomment %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,11 +8,59 @@
         body { font-family: Arial, sans-serif; background: #f4f7f9; padding: 50px; }
         .container { max-width: 400px; margin: auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background: #dc3545; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+        button { background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
         .error { color: red; font-weight: bold; }
+
+                nav{
+            position:fixed; top:0; left:0; right:0;
+            height:72px;
+            background:rgba(249,246,241,0.95);
+            backdrop-filter:blur(14px);
+            border-bottom:1px solid rgba(0,0,0,0.06);
+            z-index:1000;
+            padding:0 40px;
+        }
+
+        .nav-inner{
+            max-width:1240px; margin:auto; height:100%;
+            display:flex; align-items:center; justify-content:space-between;
+        }
+
+        .logo{
+            font-family:'Fraunces',serif;
+            font-size:1.75rem;
+            font-weight:700;
+            color:var(--ink);
+            text-decoration:none;
+        }
+
+        .nav-links a{
+            margin:0 20px;
+            text-decoration:none;
+            color:#555;
+            font-weight:500;
+        }
+
+        .nav-actions a{
+            margin-left:15px;
+            color:var(--ink);
+            font-weight:500;
+        }
     </style>
 </head>
 <body>
+    <nav>
+    <div class="nav-inner">
+        <a href="/" class="logo">Smart Stationery</a>
+        <div>
+                    <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="{% url 'product_list' %}">Shop</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+
+    </div>
+</nav>
     <div class="container">
         <h2>🔐 Admin Login</h2>
         

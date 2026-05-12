@@ -179,16 +179,35 @@
 </head>
 <body>
 
+<!-- FIXED NAVBAR -->
 <nav>
     <div class="nav-inner">
+        <!-- Logo -->
         <a href="/" class="logo">Smart Stationery</a>
-        <div class="nav-links">
+
+        <!-- Menu Links -->
+<div class="nav-links">
             <a href="/">Home</a>
             <a href="{% url 'product_list' %}">Shop</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
         </div>
+
+        <!-- Right Side -->
         <div class="nav-actions">
-            <a href="{% url 'cart:cart_view' %}">🛒 Cart</a>
-            <a href="{% url 'customer_login' %}">Account</a>
+            {% comment %} <a href="{% url 'cart:cart_view' %}" style="margin-right:20px;">🛒 Cart</a> {% endcomment %}
+            
+            {% if user.is_authenticated %}
+                <span style="margin-right:15px; font-weight:500;">
+                    👋 Hello, {{ user.full_name|default:user.email }}
+                </span>
+                <a href="{% url 'customer_logout' %}" style="color:#e86b4a; font-weight:600;">Logout</a>
+            {% else %}
+                <a href="{% url 'customer_login' %}">Login</a>
+                <a href="{% url 'customer_register' %}" style="margin-left:15px; background:var(--ink); color:white; padding:8px 18px; border-radius:50px; text-decoration:none; font-size:0.9rem;">
+                    Register
+                </a>
+            {% endif %}
         </div>
     </div>
 </nav>

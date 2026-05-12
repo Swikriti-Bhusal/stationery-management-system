@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Smart Stationery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --cream:#f9f6f1;
+            --ink:#1a1a1a;
+            --coral:#e86b4a;
+        }
+        *{ margin:0; padding:0; box-sizing:border-box; }
+        body{
+            font-family:'DM Sans',sans-serif;
+            background: var(--cream);
+            color:var(--ink);
+        }
+        nav{
+            position:fixed; top:0; left:0; right:0;
+            height:72px; background:rgba(249,246,241,0.97);
+            backdrop-filter:blur(14px); border-bottom:1px solid rgba(0,0,0,0.08);
+            z-index:1000; padding:0 40px;
+        }
+        .nav-inner{
+            max-width:1240px; margin:auto; height:100%;
+            display:flex; align-items:center; justify-content:space-between;
+        }
+        .logo{
+            font-family:'Fraunces',serif;
+            font-size:1.75rem;
+            font-weight:700;
+            color:var(--ink);
+            text-decoration:none;
+        }
+
+        .section{
+            max-width:1240px;
+            margin:100px auto 80px;
+            padding:0 40px;
+        }
+        .about-content{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:60px;
+            align-items:center;
+        }
+        h1{
+            font-family:'Fraunces',serif;
+            font-size:3rem;
+            line-height:1.1;
+            margin-bottom:25px;
+        }
+        p{
+            color:#555;
+            line-height:1.8;
+            margin-bottom:20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="logo">Smart Stationery</a>
+        <div>
+            <a href="/">Home</a>
+            <a href="{% url 'product_list' %}">Shop</a>
+            <a href="/about/">About</a>
+            <a href="/contact/">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<div class="section">
+    <div class="about-content">
+        <div>
+            <h1>Stationery that sparks joy on every page.</h1>
+            <p>Smart Stationery was founded with a simple mission — to bring premium quality, beautifully designed stationery to students, creators, and professionals across Nepal.</p>
+            <p>We carefully curate every product we sell, from notebooks and pens to planners and desk accessories, ensuring the highest standards of quality and aesthetics.</p>
+            <p>Whether you're a student preparing for exams, a professional organizing your day, or an artist looking for inspiration — we have something special for you.</p>
+        </div>
+        <div>
+            <img src="https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?w=800" style="width:100%; border-radius:20px;" alt="About Us">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
