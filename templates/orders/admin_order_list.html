@@ -1,43 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin - All Orders</title>
-    <style>
-        body { font-family: Arial; background: #f4f7f9; padding: 20px; }
-        .container { max-width: 1200px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
-        th { background: #343a40; color: white; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>All Customer Orders</h1>
-        <a href="{% url 'admin_dashboard' %}">← Back to Admin Dashboard</a>
-        
-        <table>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            {% for order in orders %}
-            <tr>
-                <td>#{{ order.id }}</td>
-                <td>{{ order.user.full_name }}</td>
-                <td>{{ order.order_date|date:"d M, Y" }}</td>
-                <td>Rs. {{ order.total_amount }}</td>
-                <td>{{ order.status|title }}</td>
-                <td>
-                    <a href="{% url 'orders:admin_order_detail' order.id %}">View</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
-</html>
+{% extends 'accounts/admin_base.html' %}
+
+{% block page_title %}All Orders{% endblock %}
+
+{% block content %}
+<h1>All Customer Orders</h1>
+
+<table style="width:100%; border-collapse:collapse; background:white; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+    <tr style="background:#1e3a8a; color:white;">
+        <th style="padding:15px; text-align:left;">Order ID</th>
+        <th style="padding:15px; text-align:left;">Customer</th>
+        <th style="padding:15px; text-align:left;">Date</th>
+        <th style="padding:15px; text-align:right;">Amount</th>
+        <th style="padding:15px; text-align:center;">Status</th>
+        <th style="padding:15px;">Action</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td style="padding:15px;">#{{ order.id }}</td>
+        <td style="padding:15px;">{{ order.user.full_name }}</td>
+        <td style="padding:15px;">{{ order.order_date|date:"d M, Y" }}</td>
+        <td style="padding:15px; text-align:right;">Rs. {{ order.total_amount }}</td>
+        <td style="padding:15px; text-align:center;">
+            <span style="padding:5px 12px; border-radius:20px; font-size:0.85rem; 
+                        {% if order.status == 'delivered' %}background:#10b981; color:white;
+                        {% elif order.status == 'pending' %}background:#f59e0b; color:white;
+                        {% else %}background:#64748b; color:white;{% endif %}">
+                {{ order.status|title }}
+            </span>
+        </td>
+        <td style="padding:15px;">
+            <a href="{% url 'orders:admin_order_detail' order.id %}" style="color:#1e3a8a; font-weight:600;">View Details →</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

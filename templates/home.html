@@ -51,12 +51,41 @@
             text-decoration:none;
             color:#555;
             font-weight:500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover{
+            color: var(--coral);
         }
 
         .nav-actions a{
             margin-left:15px;
-            color:var(--ink);
+            text-decoration:none;
             font-weight:500;
+            transition: all 0.3s;
+        }
+
+        .nav-actions a:hover{
+            color: var(--coral);
+        }
+
+        .user-greeting{
+            color: var(--coral);
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .register-btn{
+            background:var(--ink);
+            color:white !important;
+            padding:8px 18px;
+            border-radius:50px;
+            text-decoration:none;
+            font-size:0.9rem;
+        }
+
+        .register-btn:hover{
+            background:var(--coral);
         }
 
         /* HERO */
@@ -87,6 +116,11 @@
             text-decoration:none;
             font-weight:600;
             display:inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover{
+            background:var(--coral);
         }
 
         /* Categories & Products */
@@ -128,6 +162,11 @@
             margin-bottom:12px;
         }
 
+        .cat-name{
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
         .products-grid{
             display:grid;
             grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
@@ -156,6 +195,27 @@
             padding:16px;
         }
 
+        .product-category{
+            color: var(--coral);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .product-name{
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .product-footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
         .price{
             color:var(--coral);
             font-size:1.35rem;
@@ -170,6 +230,7 @@
             border-radius:10px;
             cursor:pointer;
             font-weight:600;
+            transition: background 0.3s;
         }
 
         .cart-btn:hover{
@@ -179,107 +240,105 @@
 </head>
 <body>
 
-<!-- FIXED NAVBAR -->
+<!-- FIXED NAVBAR WITH AUTHENTICATION -->
 <nav>
     <div class="nav-inner">
         <!-- Logo -->
         <a href="/" class="logo">Smart Stationery</a>
 
         <!-- Menu Links -->
-<div class="nav-links">
+        <div class="nav-links">
             <a href="/">Home</a>
             <a href="{% url 'product_list' %}">Shop</a>
             <a href="{% url 'about' %}">About</a>
             <a href="{% url 'contact' %}">Contact</a>
         </div>
 
-        <!-- Right Side -->
+        <!-- Right Side - Shows different options based on login status -->
         <div class="nav-actions">
-            {% comment %} <a href="{% url 'cart:cart_view' %}" style="margin-right:20px;">🛒 Cart</a> {% endcomment %}
-            
             {% if user.is_authenticated %}
-                <span style="margin-right:15px; font-weight:500;">
-                    👋 Hello, {{ user.full_name|default:user.email }}
-                </span>
-                <a href="{% url 'customer_logout' %}" style="color:#e86b4a; font-weight:600;">Logout</a>
+                <!-- User is logged in -->
+                <span class="user-greeting">Hi, {{ user.full_name|default:user.email|truncatechars:15 }}</span>
+                <a href="{% url 'customer_logout' %}">Logout</a>
             {% else %}
+                <!-- User is not logged in -->
                 <a href="{% url 'customer_login' %}">Login</a>
-                <a href="{% url 'customer_register' %}" style="margin-left:15px; background:var(--ink); color:white; padding:8px 18px; border-radius:50px; text-decoration:none; font-size:0.9rem;">
-                    Register
-                </a>
+                <a href="{% url 'customer_register' %}" class="register-btn">Register</a>
             {% endif %}
         </div>
     </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-    <div>
-        <div style="color:var(--coral); font-weight:700;">✦ NEW COLLECTION 2026</div>
-        <h1 class="hero-title">Stationery that <em>sparks joy</em> on every page.</h1>
-        <p style="font-size:1.15rem; color:#555; max-width:480px;">
-            Curated notebooks, dreamy pens, and elegant desk pieces designed for creators and students.
-        </p>
-        <div style="margin-top:40px;">
-            <a href="{% url 'product_list' %}" class="btn-primary">Shop Now →</a>
-        </div>
-    </div>
-<div class="hero-image">
-<div class="hero-image">
-    <img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=600&h=600&q=80"
-         alt="Cute stationery items on desk">
-</div>
-</section>
-
-<!-- Categories -->
-<section class="section">
-    <h2 class="section-title">Shop by Category</h2>
-    <div class="categories-grid">
-        {% for category in categories %}
-        <a href="{% url 'product_list' %}?category={{ category.slug }}" class="cat-card">
-            {% if category.image %}
-                <img src="{{ category.image.url }}" alt="{{ category.name }}">
-            {% else %}
-                <img src="https://source.unsplash.com/random/300x300/?{{ category.name }}" alt="{{ category.name }}">
-            {% endif %}
-            <div class="cat-name">{{ category.name }}</div>
-        </a>
-        {% endfor %}
-    </div>
-</section>
-
-<!-- Products -->
-<section class="section">
-    <h2 class="section-title">Loved by Everyone</h2>
-    <div class="products-grid">
-        {% for product in products %}
-        <div class="product-card">
-            {% if product.image %}
-                <div class="product-image">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                </div>
-            {% endif %}
-            <div class="product-info">
-                <div class="product-category">{{ product.category }}</div>
-                <div class="product-name">{{ product.name }}</div>
-                <div class="product-footer">
-                    <div class="price">Rs. {{ product.price }}</div>
-                    <button onclick="addToCart({{ product.id }})" class="cart-btn">+ Add</button>
-                </div>
+<!-- MAIN CONTENT BLOCK - This allows other pages to replace content -->
+{% block content %}
+    <!-- HERO -->
+    <section class="hero">
+        <div>
+            <div style="color:var(--coral); font-weight:700;">✦ NEW COLLECTION 2026</div>
+            <h1 class="hero-title">Stationery that <em>sparks joy</em> on every page.</h1>
+            <p style="font-size:1.15rem; color:#555; max-width:480px;">
+                Curated notebooks, dreamy pens, and elegant desk pieces designed for creators and students.
+            </p>
+            <div style="margin-top:40px;">
+                <a href="{% url 'product_list' %}" class="btn-primary">Shop Now →</a>
             </div>
         </div>
-        {% endfor %}
-    </div>
-</section>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=600&h=600&q=80"
+                 alt="Cute stationery items on desk">
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="{% url 'product_list' %}?category={{ category.slug }}" class="cat-card">
+                {% if category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                {% else %}
+                    <img src="https://source.unsplash.com/random/300x300/?{{ category.name }}" alt="{{ category.name }}">
+                {% endif %}
+                <div class="cat-name">{{ category.name }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="section">
+        <h2 class="section-title">Loved by Everyone</h2>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.image %}
+                    <div class="product-image">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    </div>
+                {% endif %}
+                <div class="product-info">
+                    <div class="product-category">{{ product.category.name }}</div>
+                    <div class="product-name">{{ product.name }}</div>
+                    <div class="product-footer">
+                        <div class="price">Rs. {{ product.price }}</div>
+                        <button onclick="addToCart({{ product.id }})" class="cart-btn">+ Add</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
 
 <script>
 function addToCart(productId){
-    if (!{{ request.user.is_authenticated|yesno:"true,false" }}){
+    {% if user.is_authenticated %}
+        window.location.href = "{% url 'cart:add_to_cart' 0 %}".replace('0', productId);
+    {% else %}
         alert("Please login to add items to cart.");
         window.location.href = "{% url 'customer_login' %}";
-        return;
-    }
-    window.location.href = "{% url 'cart:add_to_cart' 0 %}".replace('0', productId);
+    {% endif %}
 }
 </script>
 

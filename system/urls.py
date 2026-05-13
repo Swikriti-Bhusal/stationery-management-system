@@ -28,7 +28,7 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('products/', include('products.urls')),
     path('cart/', include('cart.urls', namespace='cart')),
-    path('orders/', include('orders.urls', namespace='orders')),
+    path('admin/', include('orders.urls', namespace='orders')),
 
     # Django Admin (Keep at bottom)
     path('admin/', admin.site.urls),
