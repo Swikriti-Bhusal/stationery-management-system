@@ -19,7 +19,7 @@
             <p><strong>Status:</strong> {{ order.status|title }}</p>
             <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
         </div>
-        <a href="{% url 'my_orders' %}" style="background:#007bff; color:white; padding:12px 25px; text-decoration:none; border-radius:5px;">
+        <a href="{% url 'orders:my_orders' %}" style="background:#007bff; color:white; padding:12px 25px; text-decoration:none; border-radius:5px;">
             View My Orders
         </a>
         <a href="{% url 'product_list' %}" style="margin-left:15px;">Continue Shopping</a>
