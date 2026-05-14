@@ -14,6 +14,7 @@
     </style>
 </head>
 <body>
+    {% include 'navbar.html' %}
     <div class="container">
         <h1>Order #{{ order.id }} Details</h1>
         <p><strong>Date:</strong> {{ order.order_date|date:"d M, Y h:i A" }}</p>
