@@ -1,0 +1,160 @@
+{% extends 'accounts/admin_base.html' %}
+
+{% block title %}Manage Users{% endblock %}
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<style>
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .search-input {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+    
+    .search-btn {
+        background: var(--sidebar);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .user-table th,
+    .user-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .user-table th {
+        background: #f8fafc;
+        font-weight: 600;
+    }
+    
+    .user-table tr:hover {
+        background: #f9fafb;
+    }
+    
+    .role-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .role-admin {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+    
+    .role-customer {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .btn-view {
+        background: #3b82f6;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 12px;
+        margin-right: 5px;
+    }
+    
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 12px;
+    }
+    
+    .btn-view:hover {
+        background: #2563eb;
+    }
+    
+    .btn-delete:hover {
+        background: #dc2626;
+    }
+    
+    .no-users {
+        text-align: center;
+        padding: 50px;
+        color: #6b7280;
+    }
+</style>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>All Users ({{ users.count }})</h3>
+    </div>
+    
+    <!-- Search Box -->
+    <form method="GET" action="{% url 'admin_user_list' %}" class="search-box">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by name, email, or phone..." class="search-input">
+        <button type="submit" class="search-btn">🔍 Search</button>
+        {% if search_query %}
+            <a href="{% url 'admin_user_list' %}" style="padding: 10px 15px; background: #6b7280; color: white; border-radius: 8px; text-decoration: none;">Clear</a>
+        {% endif %}
+    </form>
+    
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Orders</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.full_name|default:"-" }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone|default:"-" }}</td>
+                <td>
+                    <span class="role-badge role-{{ user.role }}">
+                        {{ user.role|title }}
+                    </span>
+                </td>
+                <td>{{ user.order_count }}</td>
+                <td>{{ user.date_joined|date:"d M Y" }}</td>
+                <td>
+                    <a href="{% url 'admin_user_detail' user.id %}" class="btn-view">View</a>
+                    {% if user.id != request.user.id %}
+                        <a href="{% url 'admin_user_delete' user.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete {{ user.full_name|default:user.email }}?')">Delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+                <tr class="no-users">
+                    <td colspan="8">No users found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

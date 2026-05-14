@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from products.models import Category, Product
 from .forms import CustomerRegistrationForm
 from .models import CustomUser
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from orders.models import Order
 
 # Customer Registration
@@ -145,6 +145,75 @@ def admin_dashboard(request):
     }
     
     return render(request, 'accounts/admin_dashboard.html', context)
+
+
+# ==================== USER MANAGEMENT (ADMIN) ====================
+
+@login_required
+def admin_user_list(request):
+    """View all users (Admin only)"""
+    if request.user.role != 'admin':
+        return redirect('customer_dashboard')
+    
+    # Get all users except the current admin
+    users = CustomUser.objects.all().order_by('-date_joined')
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        users = users.filter(
+            Q(email__icontains=search_query) | 
+            Q(full_name__icontains=search_query) |
+            Q(phone__icontains=search_query)
+        )
+    
+    # Get order count for each user
+    for user in users:
+        user.order_count = Order.objects.filter(user=user).count()
+    
+    return render(request, 'accounts/admin_user_list.html', {
+        'users': users,
+        'search_query': search_query
+    })
+
+
+@login_required
+def admin_user_detail(request, user_id):
+    """View user details and order history (Admin only)"""
+    if request.user.role != 'admin':
+        return redirect('customer_dashboard')
+    
+    user = get_object_or_404(CustomUser, id=user_id)
+    orders = Order.objects.filter(user=user).order_by('-order_date')
+    
+    total_spent = orders.aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+    
+    return render(request, 'accounts/admin_user_detail.html', {
+        'user': user,
+        'orders': orders,
+        'order_count': orders.count(),
+        'total_spent': total_spent
+    })
+
+
+@login_required
+def admin_user_delete(request, user_id):
+    """Delete a user (Admin only)"""
+    if request.user.role != 'admin':
+        return redirect('customer_dashboard')
+    
+    user_to_delete = get_object_or_404(CustomUser, id=user_id)
+    
+    # Prevent admin from deleting themselves
+    if user_to_delete.id == request.user.id:
+        messages.error(request, "You cannot delete your own account.")
+        return redirect('admin_user_list')
+    
+    user_name = user_to_delete.full_name or user_to_delete.email
+    user_to_delete.delete()
+    messages.success(request, f"User '{user_name}' has been deleted successfully.")
+    
+    return redirect('admin_user_list')
 
 
 def home(request):

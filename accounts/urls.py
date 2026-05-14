@@ -16,6 +16,11 @@ urlpatterns = [
     # path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('staff/dashboard/', views.admin_dashboard, name='admin_dashboard'),  
 
+     # User Management URLs
+    path('admin/users/', views.admin_user_list, name='admin_user_list'),
+    path('admin/users/<int:user_id>/', views.admin_user_detail, name='admin_user_detail'),
+    path('admin/users/<int:user_id>/delete/', views.admin_user_delete, name='admin_user_delete'),
+
 
     path('', views.home, name='home'),
 
