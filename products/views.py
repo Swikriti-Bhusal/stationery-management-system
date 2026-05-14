@@ -3,14 +3,6 @@ from django.contrib.auth.decorators import login_required
 from .models import Product, Category
 
 # Customer Views
-# def product_list(request):
-#     products = Product.objects.filter(is_available=True)
-#     categories = Category.objects.all()
-#     return render(request, 'products/product_list.html', {
-#         'products': products,
-#         'categories': categories
-#     })
-
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     return render(request, 'products/product_detail.html', {'product': product})

@@ -17,59 +17,64 @@
             background:var(--cream);
             color:var(--ink);
         }
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 72px;
-    background: rgba(249, 246, 241, 0.97);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    z-index: 1000;
-    padding: 0 40px;
-}
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(249, 246, 241, 0.97);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 0 40px;
+        }
 
-.nav-inner {
-    max-width: 1240px;
-    margin: auto;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+        .nav-inner {
+            max-width: 1240px;
+            margin: auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-.logo {
-    font-family: 'Fraunces', serif;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--ink);
-    text-decoration: none;
-}
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--ink);
+            text-decoration: none;
+        }
 
-.nav-links a {
-    margin: 0 22px;
-    text-decoration: none;
-    color: #555;
-    font-weight: 500;
-    transition: color 0.3s;
-}
+        .nav-links a {
+            margin: 0 22px;
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-.nav-links a:hover {
-    color: var(--ink);
-}
+        .nav-links a:hover {
+            color: var(--ink);
+        }
 
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-        .search-bar{
-            padding:10px 20px;
-            width: 350px;
-            border:1px solid #ddd;
-            border-radius:50px;
-            font-size:1rem;
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cart-link {
+            cursor: pointer;
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            margin-right: 20px;
+        }
+        
+        .cart-link:hover {
+            color: var(--coral);
         }
 
         .products-grid{
@@ -115,6 +120,19 @@ nav {
         .cart-btn:hover{
             background:var(--coral);
         }
+        
+        .alert-message {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -135,7 +153,12 @@ nav {
 
         <!-- Right Side -->
         <div class="nav-actions">
-            <a href="{% url 'cart:cart_view' %}" style="margin-right:20px;">🛒 Cart</a>
+            <!-- Cart link with login check -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'cart:cart_view' %}" class="cart-link">🛒 Cart</a>
+            {% else %}
+                <a href="javascript:void(0);" onclick="checkLoginAndRedirect('{% url 'cart:cart_view' %}')" class="cart-link">🛒 Cart</a>
+            {% endif %}
             
             {% if user.is_authenticated %}
                 <span style="margin-right:15px; font-weight:500;">
@@ -181,9 +204,7 @@ nav {
 
 {% if messages %}
     {% for message in messages %}
-        <div style="position:fixed; top:80px; left:50%; transform:translateX(-50%); 
-                    background:#28a745; color:white; padding:12px 25px; 
-                    border-radius:8px; z-index:9999; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+        <div class="alert-message">
             {{ message }}
         </div>
     {% endfor %}
@@ -191,12 +212,21 @@ nav {
 
 <script>
 function addToCart(productId){
-    if (!{{ request.user.is_authenticated|yesno:"true,false" }}){
+    {% if user.is_authenticated %}
+        window.location.href = "{% url 'cart:add_to_cart' 0 %}".replace('0', productId);
+    {% else %}
         alert("Please login to add items to cart.");
         window.location.href = "{% url 'customer_login' %}";
-        return;
-    }
-    window.location.href = "{% url 'cart:add_to_cart' 0 %}".replace('0', productId);
+    {% endif %}
+}
+
+function checkLoginAndRedirect(url){
+    {% if user.is_authenticated %}
+        window.location.href = url;
+    {% else %}
+        alert("Please login to view your cart.");
+        window.location.href = "{% url 'customer_login' %}";
+    {% endif %}
 }
 </script>
 
