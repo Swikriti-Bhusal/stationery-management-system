@@ -144,7 +144,7 @@
             
             <!-- User Menu -->
             {% if user.is_authenticated %}
-                <span class="user-greeting">👋 {{ user.full_name|default:user.email|truncatechars:15 }}</span>
+                <span class="user-greeting"> Hi, {{ user.full_name|default:user.email|truncatechars:15 }}</span>
                 <a href="{% url 'customer_logout' %}" class="logout-link">Logout</a>
             {% else %}
                 <a href="{% url 'customer_login' %}">Login</a>

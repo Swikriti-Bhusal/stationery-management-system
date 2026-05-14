@@ -29,12 +29,71 @@
             color: var(--coral);
         }
 
+        /* Search Bar Styles */
+        .search-container {
+            max-width: 1240px;
+            margin: 20px auto;
+            padding: 0 40px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+        
+        .search-btn {
+            background: var(--ink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: var(--coral);
+        }
+        
+        .search-info {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+        
+        .clear-link {
+            color: var(--coral);
+            margin-left: 10px;
+            text-decoration: none;
+        }
+        
+        .clear-link:hover {
+            text-decoration: underline;
+        }
+
         .products-grid{
             display:grid;
             grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
             gap:26px;
             max-width:1240px;
-            margin:100px auto 60px;
+            margin:40px auto 60px;
             padding:0 40px;
         }
 
@@ -68,9 +127,27 @@
             background:var(--ink); color:white; border:none;
             padding:10px 20px; border-radius:10px; cursor:pointer;
             font-weight:600;
+            width:100%;
+            margin-top:12px;
         }
         .cart-btn:hover{
             background:var(--coral);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .no-results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--ink);
+        }
+        
+        .no-results p {
+            color: #666;
         }
         
         /* Toast message styling */
@@ -91,11 +168,31 @@
 </head>
 <body>
 
-
 {% include 'navbar.html' %}
 
-<div style="max-width:1240px; margin:100px auto 40px; padding:0 40px;">
-    <h1 style="font-family:'Fraunces',serif; font-size:2.8rem; text-align:center;">All Products</h1>
+<div style="max-width:1240px; margin:100px auto 20px; padding:0 40px;">
+    <h1 style="font-family:'Fraunces',serif; font-size:2.8rem; text-align:center;">
+        {% if search_query %}Search Results{% else %}All Products{% endif %}
+    </h1>
+</div>
+
+<!-- SEARCH BAR  -->
+<div class="search-container">
+    <form method="GET" action="{% url 'product_list' %}" class="search-form">
+        <input type="text" 
+               name="q" 
+               value="{{ search_query }}" 
+               placeholder="Search products ..." 
+               class="search-input">
+        <button type="submit" class="search-btn">🔍 Search</button>
+    </form>
+    
+    {% if search_query %}
+        <div class="search-info">
+            Showing results for: <strong>"{{ search_query }}"</strong>
+            <a href="{% url 'product_list' %}" class="clear-link">Clear search</a>
+        </div>
+    {% endif %}
 </div>
 
 <div class="products-grid">
@@ -111,20 +208,23 @@
             <div class="product-name">{{ product.name }}</div>
             <div class="price">Rs. {{ product.price }}</div>
             
-            <button onclick="addToCart({{ product.id }}, '{{ product.name }}')" class="cart-btn" style="margin-top:12px; width:100%;">
+            <button onclick="addToCart({{ product.id }}, '{{ product.name }}')" class="cart-btn">
                 + Add to Cart
             </button>
         </div>
     </div>
     {% empty %}
-        <p style="text-align:center; grid-column:1/-1; font-size:1.2rem;">No products found.</p>
+        <div class="no-results">
+            <h3>🔍 No products found</h3>
+            <p>We couldn't find any products matching "{{ search_query }}"</p>
+            <a href="{% url 'product_list' %}" style="display: inline-block; margin-top: 20px; color: var(--coral); text-decoration: none;">Clear search and browse all products</a>
+        </div>
     {% endfor %}
 </div>
 
 <script>
 function addToCart(productId, productName){
     {% if user.is_authenticated %}
-        // Save message to show after page reload
         localStorage.setItem('toastMessage', productName + " added to cart! 🛒");
         window.location.href = "{% url 'cart:add_to_cart' 0 %}".replace('0', productId);
     {% else %}
@@ -133,19 +233,18 @@ function addToCart(productId, productName){
     {% endif %}
 }
 
-// Show message when page loads
 window.onload = function() {
     var message = localStorage.getItem('toastMessage');
     if(message) {
         var toast = document.createElement('div');
+        toast.className = 'toast-message';
         toast.innerHTML = message;
-        toast.style.cssText = 'position:fixed; top:80px; left:50%; transform:translateX(-50%); background:#28a745; color:white; padding:12px 25px; border-radius:8px; z-index:9999;';
         document.body.appendChild(toast);
         
         setTimeout(function() {
             toast.remove();
             localStorage.removeItem('toastMessage');
-        }, 4000);
+        }, 2000);
     }
 }
 </script>
