@@ -77,13 +77,13 @@ def admin_login(request):
 # Logout
 def customer_logout(request):
     logout(request)
-    return redirect('customer_login')
+    return redirect('home')
 
 def admin_logout(request):
     logout(request)
-    return redirect('admin_login')
+    return redirect('home')
 
-# Temporary Dashboards (keeping but not redirecting to it automatically)
+# Temporary Dashboards 
 @login_required
 def customer_dashboard(request):
     if request.user.role != 'customer':
@@ -120,7 +120,7 @@ def admin_dashboard(request):
         'total_products': total_products,
     }
     
-    return render(request, 'accounts/admin_dashboard.html', context)  # Fixed this line
+    return render(request, 'accounts/admin_dashboard.html', context)  
 
 def home(request):
     products = Product.objects.filter(is_available=True)[:8]
