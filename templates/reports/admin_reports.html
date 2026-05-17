@@ -1,5 +1,53 @@
 {% extends 'accounts/admin_base.html' %}
 
+{% block page_title %}Sales & Inventory Reports{% endblock %}
+
+{% block content %}
+<h1>Sales & Inventory Reports</h1>
+
+<!-- Summary Cards -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:20px; margin-bottom:40px;">
+    <div class="card">
+        <h4>Total Sales</h4>
+        <h2 style="font-size:2.6rem; margin:10px 0; color:#10b981;">Rs. {{ total_sales|floatformat:0 }}</h2>
+    </div>
+    <div class="card">
+        <h4>Total Orders</h4>
+        <h2 style="font-size:2.6rem; margin:10px 0;">{{ total_orders }}</h2>
+    </div>
+    <div class="card">
+        <h4>30-Day Moving Average</h4>
+        <h2 style="font-size:2.6rem; margin:10px 0; color:#3b82f6;">Rs. {{ moving_average_30day }}</h2>
+        <small>Last 30 days average sales</small>
+    </div>
+    <div class="card">
+        <h4>60-Day Moving Average</h4>
+        <h2 style="font-size:2.6rem; margin:10px 0; color:#8b5cf6;">Rs. {{ moving_average_60day }}</h2>
+        <small>Last 60 days average sales</small>
+    </div>
+</div>
+
+<!-- Best Selling Products -->
+<h2>Best Selling Products</h2>
+<table style="width:100%; border-collapse:collapse; background:white; border-radius:12px; overflow:hidden;">
+    <tr style="background:#1e3a8a; color:white;">
+        <th style="padding:15px; text-align:left;">Product Name</th>
+        <th style="padding:15px; text-align:center;">Quantity Sold</th>
+        <th style="padding:15px; text-align:center;">Current Stock</th>
+    </tr>
+    {% for item in best_selling %}
+    <tr>
+        <td style="padding:15px;">{{ item.product__name }}</td>
+        <td style="padding:15px; text-align:center; font-weight:600;">{{ item.total_sold }}</td>
+        <td style="padding:15px; text-align:center;">{{ item.product__stock }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+
+{% comment %} {% extends 'accounts/admin_base.html' %}
+
 {% block page_title %}Sales Reports{% endblock %}
 
 {% block content %}
@@ -38,4 +86,4 @@
     {% endfor %}
 </table>
 
-{% endblock %}
+{% endblock %} {% endcomment %}

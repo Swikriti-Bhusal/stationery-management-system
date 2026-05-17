@@ -147,7 +147,7 @@ def admin_dashboard(request):
     return render(request, 'accounts/admin_dashboard.html', context)
 
 
-# ==================== USER MANAGEMENT (ADMIN) ====================
+# ==================== USER MANAGEMENT  ====================
 
 @login_required
 def admin_user_list(request):
