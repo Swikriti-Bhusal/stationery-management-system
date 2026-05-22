@@ -177,7 +177,10 @@ nav {
         </div>
 
         <div style="text-align:right;">
-            <a href="{% url 'orders:place_order' %}" class="place-order-btn">Place Order Now →</a>
+            <a href="{% url 'orders:checkout' %}" class="place-order-btn">
+    ✅ Proceed to Checkout
+</a>
+            {% comment %} <a href="{% url 'orders:place_order' %}" class="place-order-btn">Place Order Now →</a> {% endcomment %}
         </div>
 
     {% else %}

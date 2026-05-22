@@ -18,20 +18,42 @@
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# from django.contrib import admin
+# from django.urls import path, include
+# from django.conf import settings
+# from django.conf.urls.static import static
+
+# urlpatterns = [
+#     # Custom URLs First (Higher Priority)
+#     path('', include('accounts.urls')),
+#     path('products/', include('products.urls')),
+#     path('cart/', include('cart.urls', namespace='cart')),
+#     path('admin/', include('orders.urls', namespace='orders')),
+
+#     # Django Admin (Keep at bottom)
+#     path('admin/', admin.site.urls),
+#     path('reports/', include('reports.urls')),
+# ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # Custom URLs First (Higher Priority)
+    # Customer URLs (No /admin/ prefix)
     path('', include('accounts.urls')),
     path('products/', include('products.urls')),
     path('cart/', include('cart.urls', namespace='cart')),
-    path('admin/', include('orders.urls', namespace='orders')),
-
-    # Django Admin (Keep at bottom)
-    path('admin/', admin.site.urls),
+    
+    # Orders URLs - CHANGE THIS - use 'orders/' not 'admin/'
+    path('orders/', include('orders.urls', namespace='orders')),  # ← CHANGE THIS LINE
+    
+    # Admin URLs
+    path('admin-panel/', admin.site.urls),  # ← CHANGE Django admin to different path
     path('reports/', include('reports.urls')),
 ]
 

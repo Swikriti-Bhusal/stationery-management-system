@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+from decouple import config
 from pathlib import Path
+
+
+# Then later, where you define variables (usually at bottom):
+KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -122,7 +126,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Khalti Configuration
+KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY')
+KHALTI_PUBLIC_KEY = config('KHALTI_PUBLIC_KEY')
+KHALTI_BASE_URL = "https://dev.khalti.com/api/v2"
 
+# At the very bottom of settings.py
+from decouple import config
+
+KHALTI_SECRET_KEY = config('KHALTI_SECRET_KEY')
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 

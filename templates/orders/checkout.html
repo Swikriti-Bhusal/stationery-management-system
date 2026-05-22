@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Smart Stationery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --cream:#f9f6f1;
+            --ink:#1a1a1a;
+            --coral:#e86b4a;
+        }
+        *{ margin:0; padding:0; box-sizing:border-box; }
+
+        body{
+            font-family:'DM Sans',sans-serif;
+            background: var(--cream);
+            color:var(--ink);
+            padding-top: 90px;
+        }
+
+        .checkout-container{
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        label{
+            display: block;
+            margin: 18px 0 6px;
+            font-weight: 500;
+        }
+
+        input, textarea{
+            width: 100%;
+            padding: 13px 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        input:focus, textarea:focus{
+            outline: none;
+            border-color: var(--coral);
+        }
+
+        .btn{
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .btn:hover{
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        
+        .btn-cod { background: #10b981; color: white; }
+        .btn-khalti { background: #5C2D91; color: white; }
+        
+        .order-summary{
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .order-item{
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .total{
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav style="position:fixed; top:0; left:0; right:0; height:72px; background:rgba(249,246,241,0.97); backdrop-filter:blur(14px); border-bottom:1px solid rgba(0,0,0,0.08); z-index:1000; padding:0 40px;">
+    <div style="max-width:1240px; margin:auto; height:100%; display:flex; align-items:center; justify-content:space-between;">
+        <a href="/" style="font-family:'Fraunces',serif; font-size:1.75rem; text-decoration:none; color:#1a1a1a;">Smart Stationery</a>
+        <a href="{% url 'cart:cart_view' %}" style="color: var(--coral); text-decoration: none; font-weight: 500;">← Back to Cart</a>
+    </div>
+</nav>
+
+<div class="checkout-container">
+    <h1>Checkout</h1>
+    
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        {% for item in cart.items.all %}
+        <div class="order-item">
+            <span>{{ item.quantity }}x {{ item.product.name }}</span>
+            <span>Rs. {{ item.product.price|floatformat:2 }}</span>
+        </div>
+        {% endfor %}
+        <div class="order-item total">
+            <strong>Total Amount:</strong>
+            <strong>Rs. {{ cart.get_total_price|floatformat:2 }}</strong>
+        </div>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% comment %} <label><strong>Full Name *</strong></label>
+        <input type="text" 
+               name="full_name" 
+               value="{{ user.get_full_name|default:user.username }}" 
+               required 
+               placeholder="Enter your full name"> {% endcomment %}
+
+        <label><strong>Delivery Address *</strong></label>
+        <textarea name="shipping_address" rows="3" required placeholder="Enter your full delivery address"></textarea>
+
+        <label><strong>Phone Number *</strong></label>
+        <input type="tel" 
+               name="phone" 
+               value="{{ user.phone|default:'' }}" 
+               required 
+               placeholder="98XXXXXXXX">
+
+        <h3 style="margin:25px 0 15px 0;">Select Payment Method</h3>
+        
+        <button type="submit" name="payment_method" value="cod" class="btn btn-cod">
+            💵 Cash on Delivery (COD)
+        </button>
+        
+        <button type="submit" name="payment_method" value="khalti" class="btn btn-khalti">
+            💳 Pay with Khalti
+        </button>
+    </form>
+</div>
+</body>
+</html>
