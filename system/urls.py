@@ -53,7 +53,8 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace='orders')),  # ← CHANGE THIS LINE
     
     # Admin URLs
-    path('admin-panel/', admin.site.urls),  # ← CHANGE Django admin to different path
+    # path('admin-panel/', admin.site.urls), 
+    path('admin/', admin.site.urls),
     path('reports/', include('reports.urls')),
 ]
 
