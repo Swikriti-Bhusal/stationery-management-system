@@ -216,10 +216,27 @@ def admin_user_delete(request, user_id):
     return redirect('admin_user_list')
 
 
+# def home(request):
+#     products = Product.objects.filter(is_available=True)[:8]
+#     categories = Category.objects.all()
+#     return render(request, 'home.html', {
+#         'products': products,
+#         'categories': categories
+#     })
+
+
+
+
 def home(request):
-    products = Product.objects.filter(is_available=True)[:8]
-    categories = Category.objects.all()
-    return render(request, 'home.html', {
-        'products': products,
-        'categories': categories
-    })
+    """Home page - shows static content for guests, dynamic for logged-in users"""
+    if request.user.is_authenticated:
+        # Logged-in users get dynamic content from database
+        products = Product.objects.filter(is_available=True)[:8]
+        categories = Category.objects.all()
+        return render(request, 'home.html', {
+            'products': products,
+            'categories': categories
+        })
+    else:
+        # Guests get static page
+        return render(request, 'guest_home.html')    
