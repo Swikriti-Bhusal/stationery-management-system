@@ -241,12 +241,32 @@ def order_success(request, order_id):
     })
 
 
+# @login_required
+# def order_detail(request, order_id):
+#     order = get_object_or_404(Order, id=order_id)
+#     # Check if user is admin or order owner
+#     if request.user.role != 'admin' and order.user != request.user:
+#         return redirect('customer_dashboard')
+    
+#     try:
+#         payment = Payment.objects.get(order=order)
+#     except Payment.DoesNotExist:
+#         payment = None
+        
+#     return render(request, 'orders/order_detail.html', {
+#         'order': order,
+#         'payment': payment
+#     })
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    # Check if user is admin or order owner
+    
+    # Security check
     if request.user.role != 'admin' and order.user != request.user:
         return redirect('customer_dashboard')
+    
+    # Fetch order items
+    order_items = order.items.all().select_related('product')  
     
     try:
         payment = Payment.objects.get(order=order)
@@ -255,6 +275,7 @@ def order_detail(request, order_id):
         
     return render(request, 'orders/order_detail.html', {
         'order': order,
+        'items': order_items,     
         'payment': payment
     })
 

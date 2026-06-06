@@ -1,7 +1,7 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Product, Category
-
 
 # ====================== LINEAR SEARCH ALGORITHM ======================
 def linear_search_products(products, query):
@@ -13,12 +13,33 @@ def linear_search_products(products, query):
     result = []
     
     for product in products:
-        if (query in product.name.lower() or 
-            query in (product.description or "").lower() or 
-            query in product.category.name.lower()):
-            result.append(product)
+        name = product.name.lower()
+        desc = (product.description or "").lower()
+        cat  = product.category.name.lower()
+        
+        # Whole word matching (better than simple 'in')
+        import re
+        word_pattern = r'\b' + re.escape(query) + r'\b'
+        
+        name_match = bool(re.search(word_pattern, name))
+        desc_match = bool(re.search(word_pattern, desc))
+        cat_match  = bool(re.search(word_pattern, cat))
+        
+        if name_match or cat_match or desc_match:
+            # Priority: Name > Category > Description
+            if name_match:
+                score = 4
+            elif cat_match:
+                score = 3
+            else:
+                score = 1
+                
+            result.append((product, score))
     
-    return result
+    # Sort: Best matches first, then newest
+    result.sort(key=lambda x: (x[1], x[0].id), reverse=True)
+    
+    return [item[0] for item in result]
 
 
 # ====================== CUSTOMER VIEWS ======================
@@ -28,7 +49,6 @@ def product_detail(request, slug):
 
 
 def product_list(request):
-    # Start with QuerySet
     products_qs = Product.objects.filter(is_available=True).select_related('category')
     categories = Category.objects.all()
 
@@ -39,17 +59,15 @@ def product_list(request):
     if category_slug:
         products_qs = products_qs.filter(category__slug=category_slug)
 
-    # Apply Linear Search Algorithm
+    # Apply Linear Search
     if search_query:
         products = linear_search_products(products_qs, search_query)
     else:
-        products = products_qs
+        products = list(products_qs)   # Convert to list
 
-    # Sorting - Newest first
-    if isinstance(products, list):
+    # Sorting - Newest first when no search
+    if not search_query:
         products = sorted(products, key=lambda p: p.id, reverse=True)
-    else:
-        products = products.order_by('-id')
 
     return render(request, 'products/product_list.html', {
         'products': products,
@@ -66,6 +84,4 @@ def admin_product_list(request):
     
     products = Product.objects.all().order_by('-id')
     return render(request, 'products/admin_product_list.html', {'products': products})
-
-
 

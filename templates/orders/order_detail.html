@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,27 @@
         <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
 
         <h2>Ordered Items</h2>
-<table>
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price per Unit</th>
+                <th>Total</th>
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>Rs. {{ item.price_at_time }}</td>
+                <td><strong>Rs. {{ item.get_total_price }}</strong></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">No items found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+{% comment %} <table>
     <tr>
         <th>Product</th>
         <th>Quantity</th>
@@ -38,10 +58,12 @@
         <td><strong>Rs. {{ item.get_total_price }}</strong></td>
     </tr>
     {% endfor %}
-</table>
+</table> {% endcomment %}
 
         <br>
         <a href="{% url 'orders:my_orders' %}">← Back to My Orders</a>
     </div>
 </body>
-</html> 
+</html>  
+
+
