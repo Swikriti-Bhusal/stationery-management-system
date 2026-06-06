@@ -196,7 +196,7 @@
 </div>
 
 <div class="products-grid">
-    {% for product in products %}
+    {% comment %} {% for product in products %}
     <div class="product-card">
         {% if product.image %}
             <div class="product-image">
@@ -219,6 +219,33 @@
             <p>We couldn't find any products matching "{{ search_query }}"</p>
             <a href="{% url 'product_list' %}" style="display: inline-block; margin-top: 20px; color: var(--coral); text-decoration: none;">Clear search and browse all products</a>
         </div>
+    {% endfor %} {% endcomment %}
+        {% for product in products %}
+    <div class="product-card">
+        {% if product.image %}
+            <div class="product-image">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </div>
+        {% endif %}
+        
+        <div class="product-info">
+            <div class="product-category">{{ product.category.name }}</div>
+            <div class="product-name">{{ product.name }}</div>
+            
+            <!-- Added Description -->
+            {% if product.description %}
+                <p style="color:#666; font-size:0.9rem; line-height:1.4; margin:8px 0 12px;">
+                    {{ product.description|truncatewords:15|linebreaksbr }}
+                </p>
+            {% endif %}
+            
+            <div class="price">Rs. {{ product.price }}</div>
+            
+            <button onclick="addToCart({{ product.id }}, '{{ product.name }}')" class="cart-btn">
+                + Add to Cart
+            </button>
+        </div>
+    </div>
     {% endfor %}
 </div>
 
