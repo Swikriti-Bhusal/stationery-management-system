@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rate {{ product.name }}</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div style="max-width: 500px; margin: 100px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h2>Rate: {{ product.name }}</h2>
+        <p><strong>Price:</strong> Rs. {{ product.price }}</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            
+            <h3>Your Rating:</h3>
+            <div style="display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px; margin: 20px 0;">
+                <input type="radio" name="rating" value="5" id="star5">
+                <label for="star5" style="font-size: 40px; color: #ddd; cursor: pointer;">★</label>
+                
+                <input type="radio" name="rating" value="4" id="star4">
+                <label for="star4" style="font-size: 40px; color: #ddd; cursor: pointer;">★</label>
+                
+                <input type="radio" name="rating" value="3" id="star3">
+                <label for="star3" style="font-size: 40px; color: #ddd; cursor: pointer;">★</label>
+                
+                <input type="radio" name="rating" value="2" id="star2">
+                <label for="star2" style="font-size: 40px; color: #ddd; cursor: pointer;">★</label>
+                
+                <input type="radio" name="rating" value="1" id="star1">
+                <label for="star1" style="font-size: 40px; color: #ddd; cursor: pointer;">★</label>
+            </div>
+            
+            <br>
+            <button type="submit" style="background: #28a745; color: white; padding: 10px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                Submit Rating
+            </button>
+        </form>
+        
+        <br>
+        <a href="{{ request.GET.next|default:'/' }}">← Back</a>
+    </div>
+    
+    <style>
+        /* Star hover effect */
+        .stars input:checked ~ label,
+        .stars label:hover,
+        .stars label:hover ~ label {
+            color: #ffd700 !important;
+        }
+    </style>
+</body>
+</html>
