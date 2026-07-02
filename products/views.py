@@ -1,11 +1,11 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Product, Category
+from reviews.models import ProductRating  # ADD THIS IMPORT
 
 # ====================== LINEAR SEARCH ALGORITHM ======================
 def linear_search_products(products, query):
-    """Custom Linear Search Algorithm as per syllabus requirement"""
+    """Custom Linear Search Algorithm"""
     if not query:
         return products
     
@@ -42,6 +42,15 @@ def linear_search_products(products, query):
     return [item[0] for item in result]
 
 
+# ====================== HELPER FUNCTION FOR RATINGS ======================
+def add_ratings_to_products(products):
+    """Add weighted rating and total ratings to each product"""
+    for product in products:
+        product.weighted_rating = ProductRating.get_weighted_rating(product)
+        product.total_ratings = ProductRating.objects.filter(product=product).count()
+    return products
+
+
 # ====================== CUSTOMER VIEWS ======================
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -63,11 +72,15 @@ def product_list(request):
     if search_query:
         products = linear_search_products(products_qs, search_query)
     else:
-        products = list(products_qs)   # Convert to list
+        products = list(products_qs)   
 
-    # Sorting - Newest first when no search
+    # ========== ADD RATINGS TO PRODUCTS ==========
+    products = add_ratings_to_products(products)
+    
+    # Sort by weighted rating if no search 
     if not search_query:
-        products = sorted(products, key=lambda p: p.id, reverse=True)
+        products = sorted(products, key=lambda p: p.weighted_rating, reverse=True)
+
 
     return render(request, 'products/product_list.html', {
         'products': products,
@@ -84,4 +97,3 @@ def admin_product_list(request):
     
     products = Product.objects.all().order_by('-id')
     return render(request, 'products/admin_product_list.html', {'products': products})
-

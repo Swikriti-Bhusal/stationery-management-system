@@ -217,15 +217,34 @@
             {% endif %}
             
             <div class="price">Rs. {{ product.price }}</div>
-<!-- ====== RATING SECTION ====== -->
+<!-- ====== RATING SECTION WITH WEIGHTED ALGORITHM ====== -->
 <div style="margin: 10px 0; padding: 8px 0; border-top: 1px solid #f0f0f0;">
-    <!-- Show stars and rating count -->
+    <!-- Show stars with weighted rating -->
     <div style="font-size: 18px; color: #ffd700;">
         {% with ratings=product.ratings.all %}
             {% if ratings %}
-                <span>★★★★★</span>
+                <!-- Show stars based on weighted rating -->
+                {% with avg=product.weighted_rating|floatformat:0|add:"0" %}
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= avg %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+                
+                <!-- Show weighted rating number and count -->
+                <span style="font-size: 14px; color: #333; font-weight: 600;">
+                    {{ product.weighted_rating|floatformat:1 }}
+                </span>
                 <span style="font-size: 14px; color: #666; margin-left: 5px;">
-                    ({{ ratings|length }} review{% if ratings|length > 1 %}s{% endif %})
+                    ({{ product.total_ratings }} review{% if product.total_ratings > 1 %}s{% endif %})
+                </span>
+                
+                <!-- Show algorithm badge -->
+                <span style="font-size: 10px; background: #e3f2fd; color: #1976d2; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">
+                    weighted
                 </span>
             {% else %}
                 <span style="color: #999; font-size: 14px;">⭐ No ratings yet</span>
@@ -259,6 +278,7 @@
         {% endif %}
     </div>
 </div>
+
 <!-- ====== END RATING ====== -->
             
             <button onclick="addToCart({{ product.id }}, '{{ product.name }}')" class="cart-btn">

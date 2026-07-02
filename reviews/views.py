@@ -38,3 +38,4 @@ def delete_rating(request, product_id):
         messages.success(request, 'Your rating has been removed.')
     
     return redirect(request.META.get('HTTP_REFERER', 'product_list'))
+
