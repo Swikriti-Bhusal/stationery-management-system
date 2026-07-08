@@ -6,7 +6,7 @@ import re
 
 class CustomerRegistrationForm(UserCreationForm):
     full_name = forms.CharField(max_length=255, required=True, widget=forms.TextInput(attrs={'placeholder': 'Full Name'}))
-    address = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Address'}), required=True)  # Changed to required=True
+    address = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Address'}), required=True)
     phone = forms.CharField(max_length=15, required=True, widget=forms.TextInput(attrs={'placeholder': 'Phone Number'}))
 
     class Meta:
@@ -38,14 +38,32 @@ class CustomerRegistrationForm(UserCreationForm):
                 raise ValidationError("Enter a valid email address (cannot start with a number).")
         return email
 
+    # ============================================================
+    # FIXED: clean_phone is now properly INDENTED inside the class
+    # ============================================================
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
+        
         if phone:
+            # Remove spaces, hyphens, parentheses
             clean_phone = re.sub(r'[\s\-\(\)]', '', phone)
+            
+            # Check if only digits
             if not clean_phone.isdigit():
                 raise ValidationError("Phone number can only contain digits.")
+            
+            # Check length
             if len(clean_phone) != 10:
                 raise ValidationError("Phone number must be exactly 10 digits.")
+            
+            # Check Nepal prefix (96, 97, 98)
+            if not clean_phone.startswith(('96', '97', '98')):
+                raise ValidationError(
+                    "Phone number must start with 96, 97, or 98 (Nepal mobile number)."
+                )
+            
+            return clean_phone
+        
         return phone
 
     def clean_address(self):
@@ -54,7 +72,6 @@ class CustomerRegistrationForm(UserCreationForm):
             raise ValidationError("Address is required.")
         if address and not re.match(r'^[a-zA-Z0-9\s,.-]+$', address):
             raise ValidationError("Address can only contain letters, numbers, spaces, commas, dots, and hyphens.")
-        # Check if address contains at least one alphabet letter
         if address and not re.search(r'[a-zA-Z]', address):
             raise ValidationError("Address must contain at least one letter.")
         return address
@@ -84,3 +101,16 @@ class CustomerRegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+
+
+
+        # def clean_phone(self):
+    #     phone = self.cleaned_data.get('phone')
+    #     if phone:
+    #         clean_phone = re.sub(r'[\s\-\(\)]', '', phone)
+    #         if not clean_phone.isdigit():
+    #             raise ValidationError("Phone number can only contain digits.")
+    #         if len(clean_phone) != 10:
+    #             raise ValidationError("Phone number must be exactly 10 digits.")
+    #     return phone

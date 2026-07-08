@@ -53,7 +53,7 @@ def add_ratings_to_products(products):
 
 
 # ====================== RECOMMENDATION FUNCTION ======================
-def get_personalized_recommendations(user, limit=4):
+def get_personalized_recommendations(user, limit=3):
     """Simple recommendations based on user's purchase history"""
     recommendations = []
     
@@ -159,7 +159,7 @@ def product_list(request):
     # ========== GET RECOMMENDATIONS ==========
     hybrid_recommendations = []
     if request.user.is_authenticated:
-        hybrid_recommendations = get_personalized_recommendations(request.user, limit=4)
+        hybrid_recommendations = get_personalized_recommendations(request.user, limit=3)
 
     return render(request, 'products/product_list.html', {
         'products': products,
