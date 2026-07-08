@@ -164,6 +164,105 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             font-weight: 500;
         }
+        /* ========== RECOMMENDATIONS STYLES ========== */
+    .recommendations-section {
+        max-width: 1240px;
+        margin: 60px auto;
+        padding: 0 40px;
+    }
+    
+    .recommendations-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e5e5e5;
+        padding-bottom: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .recommendations-header h2 {
+        font-family: 'Fraunces', serif;
+        font-size: 2rem;
+    }
+    
+    .recommendations-header .rec-badge {
+        background: var(--coral);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .rec-algorithm-tag {
+        font-size: 10px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 2px 10px;
+        border-radius: 10px;
+        margin-left: 5px;
+    }
+    
+    .recommendation-card {
+        position: relative;
+    }
+    
+    .recommendation-card .rec-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(232, 107, 74, 0.9);
+        color: white;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        z-index: 10;
+    }
+    
+    .rec-reason {
+        font-size: 12px;
+        color: #666;
+        background: #f5f5f5;
+        padding: 4px 10px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-top: 5px;
+    }
+    
+    .rec-divider {
+        margin: 40px 0;
+        border: none;
+        border-top: 2px dashed #e0e0e0;
+    }
+    
+    .rec-score-bar {
+        margin-top: 10px;
+    }
+    
+    .rec-score-bar .label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #999;
+    }
+    
+    .rec-score-bar .track {
+        width: 100%;
+        height: 6px;
+        background: #f0f0f0;
+        border-radius: 3px;
+        margin-top: 2px;
+        overflow: hidden;
+    }
+    
+    .rec-score-bar .fill {
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--coral), #ff6b6b);
+        transition: width 0.5s ease;
+    }
     </style>
 </head>
 <body>
@@ -288,6 +387,83 @@
     </div>
     {% endfor %}
 </div>
+<!-- RECOMMENDATIONS SECTION  -->
+
+{% if user.is_authenticated and hybrid_recommendations %}
+<hr class="rec-divider">
+
+<div class="recommendations-section">
+    <div class="recommendations-header">
+        <div>
+            <h2>🎯 Recommended For You</h2>
+            <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">
+                Based on your purchase history
+                <span class="rec-algorithm-tag">Hybrid</span>
+            </p>
+        </div>
+        <div>
+            <span class="rec-badge">{{ hybrid_recommendations|length }} Picks</span>
+        </div>
+    </div>
+
+    <div class="products-grid" style="margin-top: 0;">
+        {% for item in hybrid_recommendations %}
+        <div class="product-card recommendation-card">
+            {% if item.product.image %}
+                <div class="product-image">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    <!-- Recommendation tag badge -->
+                    <span class="rec-tag">
+                        {% if forloop.counter <= 2 %}⭐ Top Pick
+                        {% elif forloop.counter <= 4 %}👍 Great Match
+                        {% else %}💡 Suggested
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+            
+            <div class="product-info">
+                <div class="product-category">{{ item.product.category.name }}</div>
+                <div class="product-name">{{ item.product.name }}</div>
+                
+                {% if item.product.description %}
+                    <p style="color:#666; font-size:0.85rem; line-height:1.3; margin:5px 0 10px;">
+                        {{ item.product.description|truncatewords:10|linebreaksbr }}
+                    </p>
+                {% endif %}
+                
+                <div class="price">Rs. {{ item.product.price }}</div>
+                
+                <!-- WHY RECOMMENDED -->
+                <div style="margin-top: 8px;">
+                    <span class="rec-reason">
+                        💬 {{ item.explanation }}
+                    </span>
+                </div>
+                
+                <!-- MATCH SCORE BAR -->
+                <div class="rec-score-bar">
+                    <div class="label">
+                        <span>Match Score</span>
+                        <span>{{ item.score|floatformat:0 }}%</span>
+                    </div>
+                    <div class="track">
+                        <div class="fill" style="width: {{ item.score|floatformat:0 }}%;"></div>
+                    </div>
+                </div>
+                
+                <button onclick="addToCart({{ item.product.id }}, '{{ item.product.name }}')" class="cart-btn">
+                    + Add to Cart
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- END OF RECOMMENDATIONS SECTION -->
+
 
 <script>
 function addToCart(productId, productName){

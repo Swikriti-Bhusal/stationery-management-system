@@ -12,7 +12,7 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    full_name = models.CharField(max_length=100, blank=True, default='')  # CHANGED: added blank=True
+    full_name = models.CharField(max_length=100, blank=True, default='')  
     order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
